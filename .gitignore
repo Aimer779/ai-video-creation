@@ -1,0 +1,41 @@
+# AI video creation outputs and large media files
+# Do not commit binary assets to Git; track manifests or links instead.
+
+# bailian-cli default output
+bailian-output/
+
+# Generated images, videos, audio
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.mp3
+*.wav
+*.aac
+*.flac
+
+# Project raw assets and final deliverables
+projects/**/assets/*
+projects/**/drafts/*
+projects/**/final/*
+projects/**/storyboards/*
+
+# Keep directory structure with .gitkeep
+!.gitkeep
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Logs
+*.log
