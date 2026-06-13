@@ -18,6 +18,11 @@ bailian-output/
 *.wav
 *.aac
 *.flac
+*.mid
+*.midi
+
+# Embedded / local Python package caches
+.python_packages/
 
 # Project raw assets and final deliverables
 projects/**/assets/*

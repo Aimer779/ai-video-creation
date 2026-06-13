@@ -35,6 +35,7 @@ def parse_args():
     parser.add_argument("--sort", default="name", choices=["name", "mtime"], help="Sort images by name or modification time.")
     parser.add_argument("--fps", type=int, default=24, help="Video frame rate (default: 24).")
     parser.add_argument("--clip-frames", type=int, default=20, help="Frames each image stays on screen (default: 20).")
+    parser.add_argument("--clip-durations", default=None, help="Comma-separated per-image durations in seconds. Overrides --clip-frames. Example: 1.0,0.8,0.6,0.3")
     parser.add_argument("--fade-frames", type=int, default=5, help="Crossfade overlap frames (default: 5).")
     parser.add_argument("--output-size", type=int, default=720, help="Output video width/height in pixels (default: 720).")
     parser.add_argument("--render-size", type=int, default=900, help="Internal render size before output crop (default: 900).")
@@ -117,18 +118,24 @@ def apply_grading(frame, warmth, warmth_color, contrast, saturation, paper_textu
 
 
 def compose_clips(clips, fade_frames):
-    total_frames = len(clips) * len(clips[0]) - (len(clips) - 1) * fade_frames
-    clip_frames = len(clips[0])
+    # Compute start frame for each clip, accounting for overlap with the previous clip.
+    starts = []
+    s = 0
+    for clip in clips:
+        starts.append(s)
+        s += len(clip) - fade_frames
+    total_frames = sum(len(c) for c in clips) - (len(clips) - 1) * fade_frames
+
     composed = []
     for i in range(total_frames):
         contributions = []
         for k, clip in enumerate(clips):
-            clip_start = k * (clip_frames - fade_frames)
-            clip_end = clip_start + clip_frames
+            clip_start = starts[k]
+            clip_end = clip_start + len(clip)
             if clip_start <= i < clip_end:
                 local_frame = i - clip_start
-                if k < len(clips) - 1 and local_frame >= clip_frames - fade_frames:
-                    fade_progress = (local_frame - (clip_frames - fade_frames)) / fade_frames
+                if k < len(clips) - 1 and local_frame >= len(clip) - fade_frames:
+                    fade_progress = (local_frame - (len(clip) - fade_frames)) / fade_frames
                     alpha = 1.0 - fade_progress
                 else:
                     alpha = 1.0
@@ -176,14 +183,25 @@ def main():
 
     images = normalize_images(images, args.render_size, fill_color)
 
+    # Determine per-image clip durations.
+    if args.clip_durations:
+        durations = [float(x.strip()) for x in args.clip_durations.split(",")]
+        if len(durations) == 1:
+            durations = durations * len(images)
+        elif len(durations) < len(images):
+            durations = durations + [durations[-1]] * (len(images) - len(durations))
+        clip_frames_list = [max(1, int(round(d * args.fps))) for d in durations]
+    else:
+        clip_frames_list = [args.clip_frames] * len(images)
+
     paper_texture = None
     if args.paper_texture > 0:
         paper_texture = generate_paper_texture(args.output_size, paper_color, args.seed)
 
     print("Generating individual clips with Ken Burns ...")
-    clips = [generate_clip(img, args.clip_frames, args.output_size,
+    clips = [generate_clip(img, n_frames, args.output_size,
                            args.start_scale, args.end_scale, args.rotation, fill_color)
-             for img in images]
+             for img, n_frames in zip(images, clip_frames_list)]
 
     print("Composing crossfade montage ...")
     composed = compose_clips(clips, args.fade_frames)

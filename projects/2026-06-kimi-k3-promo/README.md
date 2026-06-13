@@ -141,8 +141,28 @@ Kimi K3 不是凭空出现的科技产物，它是从三千年人类探索文明
 | 文件 | 说明 |
 |------|------|
 | `README.md` | 本文件：项目总览与创意说明 |
+| `HANDOFF.md` | 工作交接文档：已完成工作、当前状态、遗留问题与下一步建议 |
+| `audio/BRIEF.md` | BGM 制作需求 brief |
+| `audio/SCORE_SCRIPT.md` | 详细分镜配乐脚本 |
+| `audio/demo_score.mid` | 配乐参考 MIDI |
 | `Claude_Fable5_复刻教程.md` | Anthropic Fable 5 逐帧拆解与复刻教程（参考基准） |
 | `KIMI-K3-script.md` | Kimi K3《三月纪》完整制作脚本与技术参数 |
+| `assets/phase2/` | 第二阶段 19 张素材（raw + 900×900 processed），含 6 张新增图片 |
+| `drafts/full_rough_cut_v1.mp4` | 全片粗剪 v1（四段拼接，17.1s） |
+| `drafts/full_rough_cut_v2.mp4` | 全片粗剪 v2（品牌卡改为 Kimi K3 先出现，17.3s） |
+| `drafts/full_rough_cut_v3.mp4` | 全片粗剪 v3（首尾月球光环闭环 + 双品牌卡，19.7s） |
+| `drafts/full_rough_cut_v4.mp4` | 全片粗剪 v4（使用上传的 `moon-glow-v2.mp4` 作为首尾月球光环，20.6s） |
+| `drafts/full_rough_cut_v5.mp4` | 全片粗剪 v5（Phase 1 放慢 + Phase 2 变速节奏 + 6 张新图，约 21.9s） |
+| `drafts/full_rough_cut_v6.mp4` | 全片粗剪 v6（当前版本：Phase 1 0.8s/张 + Phase 2 平滑加速曲线，约 20.7s） |
+| `drafts/part1_ancient_montage_v3.mp4` | 第一阶段变速版样片（每张 1.0s，8.1s） |
+| `drafts/part1_ancient_montage_v4.mp4` | 第一阶段最终节奏样片（每张 0.8s，6.0s） |
+| `drafts/part2_nature_montage_v2.mp4` | 第二阶段变速版样片（慢→快→匀速，5.8s） |
+| `drafts/part2_nature_montage_v3.mp4` | 第二阶段最终节奏样片（0.9→0.4s 平滑曲线，6.6s） |
+| `drafts/opening_uploaded.mp4` | 从 `moon-glow-v2.mp4` 截取处理后的开场月球光环（1.5s） |
+| `drafts/closing_uploaded.mp4` | 从 `moon-glow-v2.mp4` 截取处理后的收尾月球光环（1.5s） |
+| `assets/moon-glow-v2.mp4` | 用户上传的月球光环源视频（570×530，20fps，9.45s，360° 循环） |
+| `shared/tools/generate_moon_arc_v2.py` | 备用月球光环动画生成脚本（基于 HTML 双圆遮挡法） |
+| `drafts/reference_vs_v1_comparison.md` | Reference（Fable 5）与 v1 的逐段对比分析 |
 
 ---
 
@@ -151,20 +171,31 @@ Kimi K3 不是凭空出现的科技产物，它是从三千年人类探索文明
 - [x] 创意概念确定
 - [x] 完整脚本与时间线完成
 - [x] 视觉风格与调色方案确定
-- [ ] 情绪板/参考图收集
-- [ ] 素材采集（古籍、自然、实拍）
-- [ ] 5 秒样片制作
-- [ ] 完整成片剪辑
+- [x] 第一阶段素材整理与样片（6.5s）
+- [x] 第二阶段「万物中的三」素材与样片（6.2s）
+- [x] 第一 + 第二阶段拼接测试（12.3s）
+- [x] 第三阶段「三月升空」AI 生成原型（3.5s）
+- [x] 第四阶段品牌卡原型 v3（Kimi K3 + Moonshot AI 双品牌卡，2.4s）
+- [x] 开场/收尾月球光环闭环动画（3s）
+- [x] 全片粗剪 v1（17.1s）
+- [x] 全片粗剪 v2（17.3s）
+- [x] 全片粗剪 v3（19.7s，接近目标 20s）
+- [x] 全片粗剪 v4（20.6s，使用上传的 `moon-glow-v2.mp4` 作为首尾月球光环）
+- [x] 全片粗剪 v5（约 21.9s，Phase 1 放慢 + Phase 2 变速节奏 + 6 张新图）
+- [x] 全片粗剪 v6（约 20.7s，Phase 1 0.8s/张 + Phase 2 更平滑的加速曲线）
+- [x] BGM 配乐脚本完成（新古典极简钢琴，干/湿两版规格，参考 MIDI）
+- [ ] 完整成片剪辑与调色统一
 - [ ] 音频设计与配乐
 
 ---
 
 ## 下一步建议
 
-1. **建立情绪板**：把第一、二阶段的核心画面参考图找齐，拼成 Moodboard，验证色调与节奏
-2. **确认实拍可行性**：茶叶、铜钱、光纤、萤火虫等素材是否能实拍，若不能需准备替代方案
-3. **制作 5 秒样片**：优先完成「古籍蒙太奇」或「三月升空」段落，验证整体视觉风格
-4. **补齐音频策略**：规划从古籍段到深空段的音乐变奏与音效节奏
+1. **确认品牌卡字体与 Logo**：替换为最终指定字体（Canela/Freight/思源宋体 Heavy），精修新月 Glow
+2. **统一全局调色**：添加分段 LUT / 调整图层，平滑 Phase 2 → Phase 3 色温跃迁；评估当前月球光环亮度是否需要进一步增强
+3. **精调第三阶段**：测试更多 AI i2v prompt/seed，或改用 Python/AE 粒子系统提升可控性
+4. **补齐音频**：选择氛围音乐并剪辑对齐画面切换点，注意首尾月球旋转的循环感
+5. **确认循环效果**：v4 首尾月球光环已对齐，循环播放无缝
 
 ---
 
